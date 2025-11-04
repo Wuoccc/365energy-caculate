@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => { // Thêm async
     let selectedResult = null; // To store the selected result card element
     const formatter = new Intl.NumberFormat('vi-VN');
     const MIN_BILL = 2000000; // Minimum bill amount
-    const PANEL_AREA_SQM = 2.6; // Updated panel area
+    const PANEL_AREA_SQM = 2.3; // Updated panel area
     
     // --- DOM ELEMENTS ---
     const ui = {
