@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', async () => { // Thêm async
 
         ongridPanels = adjustPanelCountOngrid(ongridPanels); // Apply adjustment ONLY to Ongrid
 
-        // Final check: adjusted panels might exceed roof limit, so check again
+        // Final check: adjusted panels might exceed roof limit
         if (ongridPanels > maxPanelsFromRoof) {
             ongridPanels = maxPanelsFromRoof; 
         }
@@ -419,7 +419,7 @@ document.addEventListener('DOMContentLoaded', async () => { // Thêm async
             const bessEnergyCovered = (additionalCapacity > 0 ? additionalCapacity : 0) * 4 * 0.9; 
             const bessPacks = Math.round(bessEnergyCovered / 5);
 
-            if (bessPacks > 0 && finalHybridCapacity > finalOngridCapacity) { 
+            if (finalHybridCapacity >= 3 && bessPacks > 0 && finalHybridCapacity > finalOngridCapacity) { 
                 const packageData = {
                     level: level, 
                     capacity: finalHybridCapacity,
