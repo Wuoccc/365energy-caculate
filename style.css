@@ -1,0 +1,234 @@
+/* CSS Variables for brand colors and theme */
+:root {
+    --brand-dark-blue: #0c2d5c;
+    --brand-light-blue: #0093d7;
+    --brand-green: #7fbc03; /* Green color for toggle */
+    --brand-highlight-blue: #008ad3; /* New highlight color */
+    --brand-light-blue-hover: #00a4e8;
+    --background-color: #f5f5f7;
+    --card-background: #ffffff;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --border-color: #d2d2d7;
+    --button-inactive-bg: #e9e9eb; /* Gray for inactive button */
+    --payback-color: #f70000; /* New color for payback period */
+    --savings-color: #0089d2; /* New color for savings text */
+}
+/* Applying base styles - Updated font-family */
+body {
+    font-family: 'Montserrat', sans-serif; /* Changed font */
+    background-color: var(--background-color);
+    color: var(--text-primary);
+}
+
+/* New Toggle Switch Styles */
+.toggle-switch-bg {
+    background-color: #e9e9eb; /* Light gray background for the switch */
+    border-radius: 9999px;
+    padding: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+}
+.toggle-switch-slider {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    width: calc(50% - 4px); /* Calculate width for one tab */
+    background-color: var(--brand-green); /* Green slider */
+    border-radius: 9999px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.toggle-switch-slider.slide-right {
+    transform: translateX(calc(100% + 4px)); /* Move to the right */
+}
+.toggle-switch-option {
+    position: relative;
+    z-index: 10;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 9999px;
+    color: var(--text-secondary); /* Default text color */
+    transition: color 0.3s ease;
+}
+.toggle-switch-option.selected {
+    color: white; /* Text color when selected */
+}
+.toggle-switch-option.disabled {
+    color: #b0b0b0; /* Grayed out text for disabled */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+/* Style for selected price option */
+.option-box.selected {
+    border-color: var(--brand-light-blue);
+    color: var(--brand-dark-blue);
+    font-weight: 600;
+    background-color: rgba(0, 147, 215, 0.05);
+}
+
+/* Styles for selectable result cards */
+.result-card {
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    border-width: 3px; /* Increased border width */
+    border-color: transparent; /* Start transparent */
+}
+.result-card:hover {
+     transform: translateY(-3px); /* Slightly increased lift */
+     box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* Enhanced shadow */
+}
+/* Updated selected style */
+.result-selected {
+    border-color: var(--brand-highlight-blue) !important; /* Highlight border with new blue */
+    background-color: rgba(0, 138, 211, 0.05) !important; /* Very light blue background */
+    transform: translateY(-1px); /* Keep slightly lifted when selected */
+    box-shadow: 0 4px 12px rgba(0, 138, 211, 0.15); /* Subtle blue shadow */
+}
+
+ /* Styles for Popup Modal */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.popup-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+.popup-overlay.active .popup-content {
+    transform: scale(1);
+}
+
+/* New styles for Image Popup */
+#image-popup-overlay {
+     background-color: rgba(0, 0, 0, 0.75); /* Darker overlay for images */
+}
+#popup-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+#close-image-popup {
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    font-size: 1.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+ #close-image-popup:hover {
+    background-color: rgba(0,0,0,0.8);
+ }
+
+
+/* Enhanced styling for the range slider (with image) */
+input[type=range] {
+    height: 12px; 
+    -webkit-appearance: none;
+    margin: 10px 0;
+    width: 100%;
+    background: transparent; 
+    cursor: pointer;
+}
+input[type=range]:focus {
+    outline: none;
+}
+/* Track styling for WebKit (Chrome, Safari) */
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 12px; 
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); 
+    background: linear-gradient(to right, #d2d2d7, #e9e9eb); 
+    border-radius: 6px; 
+    border: 1px solid #c0c0c5; 
+}
+/* Thumb styling for WebKit */
+input[type=range]::-webkit-slider-thumb {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    border: 2px solid var(--brand-light-blue); 
+    height: 32px; 
+    width: 32px;  
+    border-radius: 50%; 
+    background-color: white; 
+    background-image: url('https://i.imgur.com/reyRqf1.png'); 
+    background-size: 70%; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -11px; 
+}
+/* Focus styles for WebKit */
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, #c0c0c5, #d2d2d7); 
+}
+ /* Track styling for Firefox */
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 12px; 
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); 
+    background: linear-gradient(to right, #d2d2d7, #e9e9eb); 
+    border-radius: 6px;
+    border: 1px solid #c0c0c5;
+}
+/* Thumb styling for Firefox */
+input[type=range]::-moz-range-thumb {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    border: 2px solid var(--brand-light-blue); 
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    background-color: white;
+    background-image: url('https://i.imgur.com/reyRqf1.png');
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+/* Custom style for select arrow */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22currentColor%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25em 1.25em;
+    padding-right: 2.5rem; /* Make space for arrow */
+}

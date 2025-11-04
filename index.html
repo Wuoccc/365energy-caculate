@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ước tính công suất điện mặt trời - 365 Energy</title>
+    <link rel="shortcut icon" href="https://i.imgur.com/reyRqf1.png" type="image/png">
+    <link rel="icon" href="https://i.imgur.com/reyRqf1.png" type="image/png" sizes="any">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col min-h-screen">
+    <div class="flex-grow">
+        <div class="container mx-auto p-4 sm:p-6 md:p-12 max-w-5xl">
+            <header class="flex justify-between items-center mb-10 md:mb-16">
+                <img src="https://i.imgur.com/tJUMg8s.png" alt="365 Energy Logo" class="h-24 md:h-28 w-auto">
+                <div id="language-switcher-container" class="relative">
+                    <button id="language-switcher-button" type="button" class="inline-flex items-center justify-center w-full rounded-lg border border-[var(--border-color)] bg-gray-100 px-4 py-2 text-sm font-semibold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-light-blue)]">
+                        <img src="https://imgur.com/6jPr7xK.png" alt="Tiếng Việt" class="h-5 w-5 mr-2">
+                        <span id="selected-lang-text">VN</span>
+                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div id="language-switcher-menu" class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-10" role="menu">
+                        <div class="py-1" role="none">
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-lang="vi">
+                                <img src="https://imgur.com/6jPr7xK.png" alt="Tiếng Việt" class="h-5 w-5 mr-2"> VN
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-lang="en">
+                                <img src="https://imgur.com/uC9LHVh.png" alt="English" class="h-5 w-5 mr-2"> EN
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex flex-col gap-10">
+                <h1 data-translate="main_title" class="text-3xl md:text-4xl font-extrabold text-[var(--brand-dark-blue)] tracking-tight text-center uppercase">
+                    Ước tính công suất điện mặt trời
+                </h1>
+                <div class="bg-[var(--card-background)] border border-[var(--border-color)] p-6 md:p-10 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+                    <h2 data-translate="form_title" class="text-2xl font-bold mb-8 text-[var(--brand-dark-blue)]">Nhập thông tin</h2>
+                    <form id="solar-form" class="space-y-8">
+                        <div>
+                            <label for="bill" data-translate="bill_label" class="block mb-2 font-semibold text-gray-800">Hóa đơn tiền điện hàng tháng (VNĐ)</label>
+                            <input type="text" inputmode="numeric" id="bill" class="w-full p-4 rounded-xl bg-gray-50 border border-[var(--border-color)] focus:border-[var(--brand-light-blue)] focus:ring-2 focus:ring-[var(--brand-light-blue)] focus:ring-opacity-30 outline-none transition text-lg" data-translate-placeholder="bill_placeholder" placeholder="Ví dụ: 2.000.000" required>
+                        </div>
+
+                        <div>
+                            <label data-translate="price_type_label" class="block mb-3 font-semibold text-gray-800">Loại giá điện</label>
+                            <div id="price-type-options" class="grid grid-cols-2 gap-4">
+                                <div class="option-box p-4 text-center font-medium text-gray-600 cursor-pointer transition-all rounded-xl border-2 border-gray-200" data-value="3500" data-translate="price_type_residential">Sinh hoạt</div>
+                                <div class="option-box p-4 text-center font-medium text-gray-600 cursor-pointer transition-all rounded-xl border-2 border-gray-200" data-value="4800" data-translate="price_type_business">Kinh doanh</div>
+                            </div>
+                            <input type="hidden" id="price-type" value="3500">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="day-usage-slider" data-translate="day_usage_label" class="font-semibold text-gray-800">Tỷ lệ sử dụng điện ban ngày (%)</label>
+                                <span id="day-usage-value" class="text-lg font-bold text-[var(--brand-light-blue)]">70%</span>
+                            </div>
+                            <input type="range" id="day-usage-slider" class="w-full" min="10" max="100" step="5" value="70"> 
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label for="region-select" data-translate="region_label" class="block mb-2 font-semibold text-gray-800">Khu vực</label>
+                                <select id="region-select" class="w-full p-4 rounded-xl bg-gray-50 border border-[var(--border-color)] focus:border-[var(--brand-light-blue)] focus:ring-2 focus:ring-[var(--brand-light-blue)] focus:ring-opacity-30 outline-none transition text-lg" required>
+                                    <option value="" data-translate="region_placeholder">Vui lòng chọn khu vực</option>
+                                    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                                    <option value="Khu vực khác">Khu vực khác</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-8"> <div>
+                                    <label data-translate="know_roof_area_label" class="block mb-3 font-semibold text-gray-800">Bạn có biết diện tích mái của mình?</label>
+                                    <div id="roof-choice-options" class="grid grid-cols-2 gap-4">
+                                        <div class="option-box p-4 text-center font-medium text-gray-600 cursor-pointer transition-all rounded-xl border-2 border-gray-200 selected" data-roof-choice="no" data-translate="option_no">Không</div>
+                                        <div class="option-box p-4 text-center font-medium text-gray-600 cursor-pointer transition-all rounded-xl border-2 border-gray-200" data-roof-choice="yes" data-translate="option_yes">Có</div>
+                                    </div>
+                                </div>
+
+                                <div id="roof-area-input-wrapper" class="hidden">
+                                    <label for="roof-area-input" data-translate="roof_area_input_label" class="block mb-2 font-semibold text-gray-800">Nhập diện tích mái (m²)</label>
+                                    <input type="number" id="roof-area-input" class="w-full p-4 rounded-xl bg-gray-50 border border-[var(--border-color)] focus:border-[var(--brand-light-blue)] focus:ring-2 focus:ring-[var(--brand-light-blue)] focus:ring-opacity-30 outline-none transition text-lg" data-translate-placeholder="roof_area_input_placeholder" placeholder="Ví dụ: 50" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="error-message" class="text-red-600 text-center font-medium"></div>
+
+                        <button type="submit" data-translate="calculate_button" class="w-full bg-[var(--brand-light-blue)] hover:bg-[var(--brand-light-blue-hover)] text-white font-bold py-4 px-4 rounded-xl text-lg transition-colors">
+                            Tính toán ngay
+                        </button>
+                    </form>
+                </div>
+
+                <div id="results-section" class="hidden">
+                     <h2 data-translate="results_title" class="text-3xl font-bold mb-8 text-center text-[var(--brand-dark-blue)]">Kết quả ước tính dành cho bạn</h2>
+                     
+                     <div class="mb-8 p-6 bg-gray-100 rounded-2xl border border-gray-200">
+                        <h3 data-translate="consumption_analysis_title" class="text-lg font-semibold mb-4 text-left text-[var(--brand-dark-blue)]">Sản lượng tiêu thụ</h3>
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div>
+                                <p data-translate="day_consumption_label" class="text-[var(--text-secondary)]">Sản lượng ban ngày</p>
+                                <p class="text-3xl font-bold text-[var(--text-primary)]"><span id="day-kwh">0.00</span> kWh</p>
+                            </div>
+                            <div>
+                                <p data-translate="night_consumption_label" class="text-[var(--text-secondary)]">Sản lượng ban đêm</p>
+                                <p class="text-3xl font-bold text-[var(--text-primary)]"><span id="night-kwh">0.00</span> kWh</p>
+                            </div>
+                        </div>
+                     </div>
+
+                    <div id="panel-pack-info" class="my-8 p-6 bg-gray-100 rounded-2xl border border-gray-200"> 
+                         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-6 max-w-2xl"> 
+                            <div class="flex justify-between items-center w-full sm:w-auto">
+                                <label for="panel-power" data-translate="panel_power_label" class="text-lg font-semibold text-gray-800 mr-4">Công suất tấm pin (W)</label>
+                                <input type="number" id="panel-power" class="w-32 p-3 rounded-xl bg-white border border-[var(--border-color)] focus:border-[var(--brand-light-blue)] focus:ring-2 focus:ring-[var(--brand-light-blue)] focus:ring-opacity-30 outline-none transition text-xl text-center font-bold" data-translate-placeholder="panel_power_placeholder" placeholder="Ví dụ: 590" value="590" min="1" required>
+                            </div>
+                             <div class="flex justify-between items-center w-full sm:w-auto text-right sm:text-left">
+                                <label data-translate="max_packs_label" class="text-lg font-semibold text-gray-800 mr-4">Pack tối đa có thể dùng</label>
+                                <span id="max-packs-display" class="text-xl font-bold text-[var(--brand-dark-blue)]">00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="max-w-md mx-auto mb-8">
+                        <div id="result-toggle" class="toggle-switch-bg">
+                            <div id="result-toggle-slider" class="toggle-switch-slider"></div>
+                            <div id="toggle-option-ongrid" class="toggle-switch-option selected" data-type="ongrid" data-translate="ongrid_title_short">Bám tải</div>
+                            <div id="toggle-option-hybrid" class="toggle-switch-option" data-type="hybrid" data-translate="hybrid_title_short">Lưu trữ</div>
+                        </div>
+                    </div>
+
+                    <div id="ongrid-results">
+                        <div data-result-type="ongrid" data-result-details='{"type": "ongrid"}' class="result-card bg-[var(--card-background)] p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 max-w-3xl mx-auto">
+                            <div class="w-full md:w-1/2">
+                                <h3 data-translate="ongrid_title" class="text-2xl font-bold text-[var(--brand-dark-blue)] text-center">Hoà lưới</h3>
+                                <div class="text-center space-y-4 my-6">
+                                    <div>
+                                        <p data-translate="system_capacity" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Công suất</p>
+                                        <p class="text-4xl font-bold my-1 text-[var(--text-primary)]">
+                                            <span id="ongrid-capacity">0.00</span> kWp
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p data-translate="savings_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tiết kiệm</p>
+                                        <p class="text-2xl font-semibold text-[#0089d2]">~ <span id="ongrid-saving">0</span> VNĐ/<span data-translate="month_unit">tháng</span></p>
+                                    </div>
+                                    <div id="ongrid-roof-area-wrapper">
+                                        <p data-translate="roof_area_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Diện tích mái tối thiểu</p>
+                                        <p class="text-2xl font-semibold text-gray-700">~ <span id="ongrid-roof-area">0.00</span> m²</p>
+                                    </div>
+                                </div>
+                                <p class="text-[var(--text-secondary)] text-center text-sm">
+                                    <span data-translate="payback_label">Thời gian hoàn vốn</span>: 
+                                    <strong class="text-[#f70000]">2.5 - 3 <span data-translate="years_unit">năm</span></strong>
+                                </p>
+                            </div>
+                            <div class="w-full md:w-1/2 relative group"> <img id="ongrid-result-image" src="" alt="Sơ đồ hệ thống Hoà lưới" class="w-full rounded-lg shadow-md">
+                                <button class="view-image-button absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" title="Phóng to ảnh">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-4 h-4" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="hybrid-results" class="hidden">
+                        <div id="hybrid-result-single" data-result-type="hybrid-single" class="result-card bg-[var(--card-background)] p-6 rounded-2xl flex flex-col justify-between max-w-md mx-auto hidden">
+                             <h3 id="hybrid-single-title" class="text-2xl font-bold text-[var(--brand-dark-blue)] text-center">Phương án</h3>
+                             <div class="text-center space-y-4 my-6">
+                                <div>
+                                    <p data-translate="system_capacity" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Công suất</p>
+                                    <p class="text-4xl font-bold my-1 text-[var(--text-primary)]">
+                                        <span id="hybrid-single-capacity">0.00</span> kWp
+                                    </p>
+                                </div>
+                                <div>
+                                    <p data-translate="savings_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tiết kiệm</p>
+                                     <p class="text-2xl font-semibold text-[#0089d2]">~ <span id="hybrid-single-saving">0</span> VNĐ/<span data-translate="month_unit">tháng</span></p>
+                                </div>
+                                <div class="flex justify-center items-start gap-4 pt-2"> <div class="text-center"> <p data-translate="bess_packs_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Số pack</p>
+                                        <p class="text-2xl font-semibold text-[var(--text-primary)]"><span id="hybrid-single-packs">0</span></p>
+                                    </div>
+                                    <div id="hybrid-single-roof-area-wrapper" class="text-center"> <p data-translate="roof_area_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Diện tích mái</p>
+                                        <p class="text-2xl font-semibold text-[var(--text-primary)]">~ <span id="hybrid-single-roof-area">0.00</span> m²</p>
+                                    </div>
+                                </div>
+                            </div>
+                             <p class="text-[var(--text-secondary)] text-center text-sm">
+                                <span data-translate="payback_label">Thời gian hoàn vốn</span>: 
+                                <strong class="text-[#f70000]">4 - 5 <span data-translate="years_unit">năm</span></strong>
+                            </p>
+                            <div class="mt-4 relative group"> <img id="hybrid-single-image" src="" alt="Sơ đồ hệ thống Lưu trữ" class="w-full rounded-lg shadow-md">
+                                <button class="view-image-button absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" title="Phóng to ảnh">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-4 h-4" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="hybrid-result-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 hidden">
+                            <div id="hybrid-card-50" data-result-type="hybrid" data-result-details='{"level": 50}' class="result-card bg-[var(--card-background)] p-6 rounded-2xl flex flex-col justify-between hidden">
+                                <div> <h3 data-translate="hybrid_option_1" class="text-xl font-bold text-[var(--brand-dark-blue)] text-center">Phương án 1</h3> 
+                                    <div class="text-center space-y-3 my-4">
+                                        <div>
+                                            <p data-translate="system_capacity" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Công suất</p>
+                                            <p class="text-3xl font-bold text-[var(--text-primary)]"><span id="hybrid-capacity-50">0.00</span> kWp</p>
+                                        </div>
+                                        <div>
+                                            <p data-translate="savings_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tiết kiệm</p>
+                                             <p class="text-xl font-semibold text-[#0089d2]">~ <span id="hybrid-saving-50">0</span> VNĐ/<span data-translate="month_unit">tháng</span></p>
+                                        </div>
+                                        <div class="flex justify-center items-start gap-2 pt-2"> <div class="text-center"> <p data-translate="bess_packs_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Số pack</p>
+                                                <p class="text-xl font-semibold text-[var(--text-primary)]"><span id="bess-packs-50">0</span></p>
+                                            </div>
+                                             <div id="hybrid-roof-area-50-wrapper" class="text-center"> <p data-translate="roof_area_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Diện tích mái</p>
+                                                <p class="text-xl font-semibold text-[var(--text-primary)]">~ <span id="hybrid-roof-area-50">0.00</span> m²</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <p class="text-[var(--text-secondary)] text-center text-sm">
+                                        <span data-translate="payback_label">Thời gian hoàn vốn</span>: 
+                                        <strong class="text-[#f70000]">4 - 5 <span data-translate="years_unit">năm</span></strong>
+                                    </p>
+                                </div>
+                                <div class="mt-4 relative group"> <img id="hybrid-image-50" src="" alt="Sơ đồ Phương án 1" class="w-full rounded-lg shadow-md">
+                                    <button class="view-image-button absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" title="Phóng to ảnh">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-4 h-4" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="hybrid-card-70" data-result-type="hybrid" data-result-details='{"level": 70}' class="result-card bg-[var(--card-background)] p-6 rounded-2xl flex flex-col justify-between hidden">
+                                <div> <h3 data-translate="hybrid_option_2" class="text-xl font-bold text-[var(--brand-dark-blue)] text-center">Phương án 2</h3>
+                                    <div class="text-center space-y-3 my-4">
+                                        <div>
+                                            <p data-translate="system_capacity" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Công suất</p>
+                                            <p class="text-3xl font-bold text-[var(--text-primary)]"><span id="hybrid-capacity-70">0.00</span> kWp</p>
+                                        </div>
+                                        <div>
+                                            <p data-translate="savings_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tiết kiệm</p>
+                                             <p class="text-xl font-semibold text-[#0089d2]">~ <span id="hybrid-saving-70">0</span> VNĐ/<span data-translate="month_unit">tháng</span></p>
+                                        </div>
+                                        <div class="flex justify-center items-start gap-2 pt-2"> <div class="text-center"> <p data-translate="bess_packs_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Số pack</p>
+                                                <p class="text-xl font-semibold text-[var(--text-primary)]"><span id="bess-packs-70">0</span></p>
+                                            </div>
+                                             <div id="hybrid-roof-area-70-wrapper" class="text-center"> <p data-translate="roof_area_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Diện tích mái</p>
+                                                <p class="text-xl font-semibold text-[var(--text-primary)]">~ <span id="hybrid-roof-area-70">0.00</span> m²</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <p class="text-[var(--text-secondary)] text-center text-sm">
+                                        <span data-translate="payback_label">Thời gian hoàn vốn</span>: 
+                                        <strong class="text-[#f70000]">4 - 5 <span data-translate="years_unit">năm</span></strong>
+                                    </p>
+                                </div>
+                                <div class="mt-4 relative group"> <img id="hybrid-image-70" src="" alt="Sơ đồ Phương án 2" class="w-full rounded-lg shadow-md">
+                                    <button class="view-image-button absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" title="Phóng to ảnh">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-4 h-4" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="hybrid-card-90" data-result-type="hybrid" data-result-details='{"level": 90}' class="result-card bg-[var(--card-background)] p-6 rounded-2xl flex flex-col justify-between hidden">
+                                <div> <h3 data-translate="hybrid_option_3" class="text-xl font-bold text-[var(--brand-dark-blue)] text-center">Phương án 3</h3>
+                                    <div class="text-center space-y-3 my-4">
+                                        <div>
+                                            <p data-translate="system_capacity" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Công suất</p>
+                                            <p class="text-3xl font-bold text-[var(--text-primary)]"><span id="hybrid-capacity-90">0.00</span> kWp</p>
+                                        </div>
+                                        <div>
+                                            <p data-translate="savings_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tiết kiệm</p>
+                                             <p class="text-xl font-semibold text-[#0089d2]">~ <span id="hybrid-saving-90">0</span> VNĐ/<span data-translate="month_unit">tháng</span></p>
+                                        </div>
+                                        <div class="flex justify-center items-start gap-2 pt-2"> <div class="text-center"> <p data-translate="bess_packs_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Số pack</p>
+                                                <p class="text-xl font-semibold text-[var(--text-primary)]"><span id="bess-packs-90">0</span></p>
+                                            </div>
+                                             <div id="hybrid-roof-area-90-wrapper" class="text-center"> <p data-translate="roof_area_label" class="text-sm font-medium text-gray-500 uppercase tracking-wider">Diện tích mái</p>
+                                                <p class="text-xl font-semibold text-[var(--text-primary)]">~ <span id="hybrid-roof-area-90">0.00</span> m²</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-[var(--text-secondary)] text-center text-sm">
+                                        <span data-translate="payback_label">Thời gian hoàn vốn</span>: 
+                                        <strong class="text-[#f70000]">4 - 5 <span data-translate="years_unit">năm</span></strong>
+                                    </p>
+                                </div>
+                                <div class="mt-4 relative group"> <img id="hybrid-image-90" src="" alt="Sơ đồ Phương án 3" class="w-full rounded-lg shadow-md">
+                                    <button class="view-image-button absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" title="Phóng to ảnh">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-4 h-4" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="confirm-button-container" class="mt-10 text-center hidden">
+                        <button id="confirm-button" data-translate="confirm_button" class="bg-[var(--button-inactive-bg)] text-gray-700 hover:bg-[var(--brand-green)] hover:text-white active:bg-[var(--brand-green)] active:text-white font-bold py-3 px-8 rounded-full text-lg transition-colors">
+                            Xác nhận
+                        </button>
+                    </div>
+                    
+                    <p data-translate="results_disclaimer" class="text-right text-xs italic text-red-600 mt-6 max-w-2xl ml-auto">
+                        Lưu ý: Các số liệu trên chỉ mang tính chất tham khảo. Kết quả thực tế có thể thay đổi tùy thuộc vào điều kiện lắp đặt và các yếu tố khách quan khác.
+                    </p>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <footer class="bg-[#0d1623] mt-10">
+        <div class="container mx-auto p-6 md:p-8 max-w-5xl flex justify-between items-center">
+            <img src="https://i.imgur.com/tJUMg8s.png" alt="365 Energy Logo" class="h-20 md:h-24 w-auto">
+            <div class="text-right text-sm text-gray-300">
+                <p><strong>A:</strong> 45 Đường số 2, P. Thủ Đức, TP. Hồ Chí Minh</p>
+                <p><strong>E:</strong> marketing@365energy.vn</p>
+                <p><strong>P:</strong> 1900 0250</p>
+            </div>
+        </div>
+    </footer>
+
+     <div id="contact-popup" class="popup-overlay">
+        <div class="popup-content">
+            <button id="close-popup" class="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            <img src="https://i.imgur.com/tJUMg8s.png" alt="365 Energy Logo" class="h-16 w-auto mx-auto mb-6">
+            <h3 data-translate="popup_title" class="text-xl font-bold text-center mb-6 text-[var(--brand-dark-blue)]">Đăng ký tư vấn lắp đặt</h3>
+            <form id="contact-form" class="space-y-4">
+                <div>
+                    <label for="popup-name" data-translate="popup_name_label" class="block text-sm font-medium text-gray-700 mb-1">Họ và Tên</label>
+                    <input type="text" id="popup-name" name="name" required class="w-full p-3 rounded-lg bg-gray-50 border border-[var(--border-color)] focus:border-[var(--brand-light-blue)] focus:ring-1 focus:ring-[var(--brand-light-blue)] outline-none transition">
+                </div>
+                <div>
+                    <label for="popup-phone" data-translate="popup_phone_label" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+                    <input type="tel" id="popup-phone" name="phone" inputmode="numeric" pattern="^0\d{9}$" title="Vui lòng nhập 10 chữ số, bắt đầu bằng 0" required class="w-full p-3 rounded-lg bg-gray-50 border border-[var(--border-color)] focus:border-[var(--brand-light-blue)] focus:ring-1 focus:ring-[var(--brand-light-blue)] outline-none transition">
+                    <p id="phone-error" class="text-red-500 text-xs mt-1 hidden" data-translate="popup_phone_error_format">Vui lòng nhập SĐT 10 số, bắt đầu bằng 0.</p>
+                </div>
+                 <input type="hidden" id="selected-system-info" name="selected_system">
+                 
+                 <div id="popup-error-message" class="text-red-600 text-center text-sm -mt-2"></div>
+
+                <button id="submit-popup" type="submit" data-translate="popup_submit_button" class="w-full bg-[var(--button-inactive-bg)] text-gray-700 hover:bg-[var(--brand-green)] hover:text-white active:bg-[var(--brand-green)] active:text-white font-bold py-3 px-8 rounded-full text-lg transition-colors mt-6">
+                    Gửi
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="image-popup-overlay" class="popup-overlay">
+        <div class="p-4 relative">
+            <button id="close-image-popup" class="absolute -top-2 -right-2 text-white bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center text-2xl hover:bg-opacity-75 transition" title="Đóng">&times;</button>
+            <img id="popup-image" src="" alt="Xem ảnh phóng to" class="max-w-full max-h-[80vh] rounded-lg shadow-lg">
+        </div>
+    </div>
+
+    <div id="toast-notification" class="fixed bottom-5 right-5 bg-[var(--brand-green)] text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50">
+        <span data-translate="toast_message">Gửi thông tin thành công!</span>
+    </div>
+
+
+    <script src="script.js" defer></script>
+</body>
+</html>
